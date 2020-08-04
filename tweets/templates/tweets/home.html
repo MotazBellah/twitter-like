@@ -13,7 +13,7 @@
         <div class="col-md-4 mx-auto col-10">
             <form class="form" id="tweet-create-form" action="/create-tweet" method="post">{% csrf_token %}
                 <input type="hidden" name="next" value="/">
-                <textarea class="form-control" name="content" placeholder="Your tweet..."></textarea>
+                <textarea class="form-control" name="content" placeholder="Your tweet..." required></textarea>
                 <button class="btn btn-primary" type="submit" name="button">Tweet</button>
             </form>
 
@@ -42,14 +42,26 @@
             const method = myForm.getAttribute("method")
 
             const xhr = new XMLHttpRequest()
+            const responseType = 'json'
+
+            xhr.responseType = responseType
             xhr.open(method, url)
             xhr.setRequestHeader('HTTP_X_REQUESTED_WITH', "XMLHttpRequest")
             xhr.setRequestHeader('X-Requested-With', "XMLHttpRequest")
             xhr.onload = function() {
                 // console.log(xhr.response)
-                const serverResponse = xhr.response
-                console.log(serverResponse);
-                loadTweets(tweetsEl)
+                if(xhr.status === 201){
+                    const serverResponse = xhr.response
+                    console.log(serverResponse);
+                    console.log(serverResponse.likes);
+                    // loadTweets(tweetsEl)
+                    const newTweet = formatTweetElement(serverResponse)
+                    console.log(newTweet);
+                    ogHtml = tweetsEl.innerHTML
+                    tweetsEl.innerHTML = newTweet + ogHtml
+                    myForm.reset()
+                }
+
             }
             xhr.send(myFormData)
 
