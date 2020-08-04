@@ -2,11 +2,20 @@
 
 {% block title %} - Home{% endblock %}
 {% block content %}
-    <h1>Hello</h1>
 
-    <div id="tweets">
-        Loading...
+    <div class="row text-center">
+        <div class="col">
+            <h2>Welcom to Tweetme</h2>
+        </div>
+
     </div>
+
+    <!-- <div class="row"> -->
+        <div class="row" id="tweets">
+            Loading...
+        </div>
+
+    <!-- </div> -->
 
     <script type="text/javascript">
         const tweetsElement = document.getElementById("tweets")
@@ -28,7 +37,7 @@
         }
 
         function formatTweetElement(tweet) {
-            var formattedTweet = "<div class='mb-4 tweet' id='tweet-" + tweet.id
+            var formattedTweet = "<div class='col-12 border-top border-bottom py-3 mb-4 tweet' id='tweet-" + tweet.id
             + "'><p>" + tweet.content +
                 "</p><div class='btn-group'>" + LikeBtn(tweet) +
                 "</div></div>"
