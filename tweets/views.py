@@ -19,11 +19,16 @@ def tweet_create_view(request):
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
+        
+        if request.is_ajax():
+            return JsonResponse({}, status=201)
+
         if next_url and is_safe_url(next_url, ALLOWED_HOSTS):
             return redirect(next_url)
         form = TweetForm()
 
     return render(request, 'components/forms.html', context={"form": form})
+
 
 def tweet_list_view(request, *args, **kwargs):
     """
