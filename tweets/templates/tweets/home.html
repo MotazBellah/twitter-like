@@ -12,6 +12,9 @@
     <div class="row mb-3">
         <div class="col-md-4 mx-auto col-10">
             <form class="form" id="tweet-create-form" action="/create-tweet" method="post">{% csrf_token %}
+                <div class="d-none alert alert-danger" id="tweet-error">
+
+                </div>
                 <input type="hidden" name="next" value="/">
                 <textarea class="form-control" name="content" placeholder="Your tweet..." required></textarea>
                 <button class="btn btn-primary" type="submit" name="button">Tweet</button>
@@ -33,6 +36,19 @@
         const tweetsEl = document.getElementById("tweets")
         // console.log(tweetCreateFormEl);
 
+        function handleTweetFormError(msg, display) {
+            var errorDiv = document.getElementById("tweet-error")
+
+            if (display === true) {
+                errorDiv.setAttribute("class", "d-block alert alert-danger")
+                errorDiv.innerText = msg
+
+            } else {
+                errorDiv.setAttribute("class", "d-none alert alert-danger")
+            }
+        }
+
+
         function handleFormDidSubmit(event) {
             event.preventDefault()
 
@@ -52,17 +68,38 @@
                 // console.log(xhr.response)
                 if(xhr.status === 201){
                     const serverResponse = xhr.response
-                    console.log(serverResponse);
-                    console.log(serverResponse.likes);
+                    // console.log(serverResponse);
+                    // console.log(serverResponse.likes);
                     // loadTweets(tweetsEl)
                     const newTweet = formatTweetElement(serverResponse)
-                    console.log(newTweet);
+                    // console.log(newTweet);
                     ogHtml = tweetsEl.innerHTML
                     tweetsEl.innerHTML = newTweet + ogHtml
                     myForm.reset()
+                    handleTweetFormError('', false)
+
+                } else if (xhr.status === 400) {
+                    const errorJson = xhr.response
+                    const contentError = errorJson.content
+
+                    let contentErrorMsg;
+                    if (contentError) {
+                        contentErrorMsg = contentError[0]
+                        handleTweetFormError(contentErrorMsg, true)
+                    } else {
+                        alert("An error occured. Please try again.");
+                    }
+
+                    console.log(errorJson);
+                } else if (xhr.status === 500) {
+                    alert("There was a server error. Please try again later");
                 }
 
             }
+            xhr.onerror = function () {
+                alert("An error ocurred. Please try again later")
+            }
+
             xhr.send(myFormData)
 
         }
