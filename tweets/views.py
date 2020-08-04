@@ -7,6 +7,21 @@ def home_view(request, *args, **kwargs):
     return render(request, 'tweets/home.html')
 
 
+def tweet_list_view(request, *args, **kwargs):
+    """
+    REST API VIEW
+    return json data for all tweets
+    """
+    qs = Tweet.objects.all()
+    tweets_list = [{"id": x.id, "content": x.content, "likes": 12} for x in qs]
+    data = {
+        "isUser": False,
+        "response": tweets_list,
+    }
+
+    return JsonResponse(data, status=200)
+
+
 def home_detail_view(request, tweet_id, *args, **kwargs):
     """
     REST API VIEW
