@@ -10,6 +10,8 @@ class Tweet(models.Model):
     image = models.FileField(upload_to='images/', blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.content
 
     class Meta:
         # make the old tweets to be in the bottom
