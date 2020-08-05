@@ -6,7 +6,9 @@ from .models import Tweet
 from .forms import TweetForm
 from .serializers import TweetSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
@@ -16,7 +18,10 @@ def home_view(request, *args, **kwargs):
     return render(request, 'tweets/home.html')
 
 
+
+# @authentication_classes([SessionAuthentication])
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def tweet_create_view(request):
     data = request.POST
     serializer = TweetSerializer(data=data)
