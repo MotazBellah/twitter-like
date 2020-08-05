@@ -93,7 +93,11 @@
                     console.log(errorJson);
                 } else if (xhr.status === 500) {
                     alert("There was a server error. Please try again later");
+                } else if (xhr.status === 401) {
+                    alert("You must login!");
+                    window.location.href = '/login'
                 }
+
 
             }
             xhr.onerror = function () {
@@ -117,7 +121,8 @@
             xhr.open(method, url)
             xhr.onload = function() {
                 // console.log(xhr.response)
-                const listedItems = xhr.response.response
+                // const listedItems = xhr.response.response  => pure Django
+                const listedItems = xhr.response // rest_framework
                 let finalTweetStr = ''
                 for(let i=0; i < listedItems.length; i++) {
                     // console.log(listedItems[i])
